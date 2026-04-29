@@ -630,15 +630,15 @@ export default function App() {
         {!marketState.loading && !marketState.error && filtered.length === 0 && <div className="empty-state">No supported USD stablecoin banks were returned by the selected RPC.</div>}
 
         {!marketState.loading && filtered.length > 0 && (
-          <div className="table-wrap">
-            <table>
+          <div className="table-wrap banks-table-wrap">
+            <table className="banks-table">
               <thead>
                 <tr>
                   <th>Coin</th>
                   <th className="right">Wallet</th>
                   <th className="right">Supply APY</th>
                   <th className="right">TVL</th>
-                  <th className="right hide-sm">Utilization</th>
+                  <th className="right">Utilization</th>
                   <th className="right">Action</th>
                 </tr>
               </thead>
@@ -668,7 +668,7 @@ export default function App() {
                       <span className={'apy ' + apyClass(entry.apy)}>{formatPercent(entry.apy)}</span>
                     </td>
                     <td className="right tvl-cell">{formatTvl(entry.tvlUsd)}</td>
-                    <td className="right hide-sm">
+                    <td className="right">
                       <div className="util-wrap">
                         <span className="util-pct">{formatPercent(entry.utilization, 0)}</span>
                         <div className="util-bar"><div className="util-fill" style={{ width: `${Math.min(100, entry.utilization)}%` }} /></div>
