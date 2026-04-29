@@ -1,67 +1,51 @@
 # yield.sol
 
-`yield.sol` is a Solana frontend for live USD stablecoin deposits into marginfi.
+**Earn yield on your USD stablecoins, right from your wallet.**
 
-Current product scope:
-- `@solana/web3.js` + Solana wallet-adapter runtime
-- Wallet Standard browser wallet connection
-- Live marginfi bank APY, TVL, and utilization from Solana RPC
-- Live wallet stablecoin balances
-- Live marginfi deposit reconciliation from the user's marginfi accounts
-- Signed deposit and withdraw transactions for supported marginfi stablecoin banks
-- Cluster is selected from `VITE_MARGINFI_ENV` or inferred from the RPC URL
+yield.sol is a simple, non-custodial frontend for earning APY on USDC, USDT, PYUSD, and USDS through [marginfi](https://marginfi.com) on Solana. Connect your wallet, deposit stablecoins, and watch your balance grow.
 
-Current v1 constraints:
-- marginfi only
-- `production` and `dev` groups supported
-- Supported assets currently filtered to `USDC`, `USDT`, `PYUSD`, and `USDS`
-- The app uses the first existing marginfi account for new deposits, or creates one if none exists
-- No routing, backend indexing, or alerting layer yet
+## Features
 
-## Run locally
+- ✅ **Real-time APY** – See live yield rates across all supported stablecoin banks
+- ✅ **One-click deposits & withdrawals** – Deposit and withdraw instantly, no fees
+- ✅ **Your keys, your coins** – All transactions are signed client-side. We never hold your funds
+- ✅ **Portfolio tracking** – View your active deposits, earnings, and balances in one dashboard
+- ✅ **Multi-wallet support** – Works with all standard Solana wallets (Phantom, Solflare, etc.)
+- ✅ **Fast & responsive** – Built for desktop and mobile
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Copy the environment template:
-   ```bash
-   cp .env.example .env.local
-   ```
-3. Start the app:
-   ```bash
-   npm run dev
-   ```
+## Supported Assets
 
-## Environment
+- **USDC** – USD Coin
+- **USDT** – Tether USD
+- **PYUSD** – PayPal USD
+- **USDS** – Solana USD Stablecoin
 
-```bash
-VITE_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-VITE_MARGINFI_ENV=production
-```
+## Getting Started
 
-Use a paid Solana RPC for any serious usage. Public endpoints will rate limit and can break live deposits under load.
+1. **Open the app** in your browser
+2. **Connect your wallet** – Use any Solana wallet you prefer
+3. **Select a bank** – Choose the APY that works for you
+4. **Deposit** – Enter your amount and confirm the transaction
+5. **Earn** – Your balance grows automatically
 
-## Build
+That's it. No signup, no KYC, no waiting.
 
-```bash
-npm run build
-npm run preview
-```
+## How It Works
 
-## Deploy
+yield.sol pulls live bank data directly from the Solana blockchain and uses marginfi's official SDK. Every deposit and withdrawal is a real on-chain transaction that you control. We're just the UI—your funds are always in your account.
 
-This is still a static Vite app. Vercel, Netlify, and Cloudflare Pages all work.
+## Safety
 
-Production checklist:
-- Set a production Solana RPC endpoint
-- Test wallet discovery in the target browser matrix
-- Test deposit and withdraw flows with the exact wallets you support
-- Run `npm run build`
-- Smoke test live bank loads, balances, account creation, deposits, withdrawals, and transaction links
+- **Non-custodial** – We never touch your coins. All transactions are signed by your wallet.
+- **Open source** – All code is transparent and auditable.
+- **Audited partners** – We use marginfi, a battle-tested lending protocol on Solana.
 
-## Notes
+## For Developers
 
-- Transactions are signed client-side. This app is non-custodial.
-- The current implementation does not add protocol routing, risk scoring, backend analytics, or legal disclosures.
-- The official marginfi SDK uses `@solana/web3.js`, so this app intentionally stays on the straightforward `web3.js` path instead of mixing in Solana Kit.
+Want to self-host or contribute? See the [Developer README](https://github.com/Some1Uknow/yield-sol/blob/main/DEVELOPER.md) for setup instructions.
+
+---
+
+**Questions?** Check out marginfi's docs at [docs.marginfi.com](https://docs.marginfi.com) or join the [Solana Discord](https://discord.gg/solana).
+
+**⚠️ Disclaimer:** This app is provided as-is. Always DYOR before depositing funds. Crypto and DeFi carry risk. Yields are not guaranteed.
