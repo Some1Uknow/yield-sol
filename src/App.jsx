@@ -46,6 +46,8 @@ const TOKEN_ICON_MAP = {
   USDS: 'https://images.cryptorank.io/coins/usds1724768606452.png',
 }
 
+const MIN_VISIBLE_DEPOSIT_USD = 0.005
+
 function buildMarketRows(client) {
   return Array.from(client.banks.values())
     .filter((bank) => isSupportedAsset(bank.tokenSymbol))
@@ -92,8 +94,17 @@ function buildPositionRows(client, accounts) {
           const quantity = balance.computeQuantityUi(bank)
           const usdValue = balance.computeUsdValue(bank, oraclePrice)
           const depositAmount = quantity.assets.toNumber()
+          const depositUsdValue = usdValue.assets.toNumber()
 
-          if (depositAmount <= 0) return null
+          // Ignore dust balances that still leave an active slot but round down to $0.00 in the UI.
+          if (
+            !Number.isFinite(depositAmount) ||
+            !Number.isFinite(depositUsdValue) ||
+            depositAmount <= 0 ||
+            depositUsdValue < MIN_VISIBLE_DEPOSIT_USD
+          ) {
+            return null
+          }
 
           const { lendingRate } = bank.computeInterestRates()
 
@@ -114,7 +125,7 @@ function buildPositionRows(client, accounts) {
             apyBase: lendingRate.toNumber() * 100,
             amount: depositAmount,
             amountDisplay: depositAmount.toLocaleString(undefined, { maximumFractionDigits: 4 }),
-            amountUsd: usdValue.assets.toNumber(),
+            amountUsd: depositUsdValue,
             maxWithdraw: account.computeMaxWithdrawForBank(bank.address).toNumber(),
           }
         })

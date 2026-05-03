@@ -611,6 +611,12 @@ th.right, td.right { text-align: right; }
   background: rgba(15, 15, 16, 0.58);
 }
 
+.deposits-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
 .deposits-table thead {
   display: table-header-group;
   background: rgba(255, 255, 255, 0.02);
@@ -924,6 +930,7 @@ th.right, td.right { text-align: right; }
     overflow: visible;
     background: transparent;
   }
+  .deposits-table { display: block; width: 100%; }
   .deposits-table thead { display: none; }
   .deposits-table tbody,
   .deposits-table tr,
