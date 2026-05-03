@@ -168,6 +168,7 @@ export default function App() {
   const wallet = useWallet()
   const { setVisible } = useWalletModal()
   const networkCopy = NETWORK_LABEL === 'devnet' ? 'Solana devnet' : 'Solana mainnet'
+  const githubRepoUrl = 'https://github.com/Some1Uknow/yield-sol'
 
   const [marketState, setMarketState] = useState({
     error: '',
@@ -175,6 +176,7 @@ export default function App() {
     loading: true,
     markets: [],
   })
+  const [githubStars, setGithubStars] = useState(null)
   const [walletBalances, setWalletBalances] = useState({ sol: 0, tokens: {} })
   const [portfolioState, setPortfolioState] = useState({
     accounts: [],
@@ -199,6 +201,37 @@ export default function App() {
     }, REFRESH_INTERVAL_MS)
 
     return () => window.clearInterval(timerId)
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadGithubStars() {
+      try {
+        const response = await fetch('https://api.github.com/repos/Some1Uknow/yield-sol', {
+          signal: controller.signal,
+          headers: {
+            Accept: 'application/vnd.github+json',
+          },
+        })
+
+        if (!response.ok) return
+
+        const payload = await response.json()
+
+        if (typeof payload?.stargazers_count === 'number') {
+          setGithubStars(payload.stargazers_count)
+        }
+      } catch (error) {
+        if (error?.name !== 'AbortError') {
+          // Ignore badge failures; the header should still render cleanly.
+        }
+      }
+    }
+
+    loadGithubStars()
+
+    return () => controller.abort()
   }, [])
 
   useEffect(() => {
@@ -528,7 +561,30 @@ export default function App() {
     <div className="app-shell">
       <header className="topbar">
         <div>
-          <div className="logo"><span className="logo-accent">yield</span>.sol</div>
+          <div className="logo-row">
+            <div className="logo"><span className="logo-accent">yield</span>.sol</div>
+            <a
+              className="github-badge"
+              href={githubRepoUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Open the yield.sol GitHub repository${githubStars != null ? ` with ${githubStars} stars` : ''}`}
+              title="Open the yield.sol GitHub repository"
+            >
+              <span className="github-badge-icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+                  <path d="M8 0.39a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.49c-2.24.49-2.71-1.08-2.71-1.08-.36-.92-.88-1.17-.88-1.17-.72-.49.06-.48.06-.48.8.06 1.22.82 1.22.82.71 1.22 1.87.87 2.33.66.07-.51.28-.87.51-1.07-1.8-.2-3.7-.9-3.7-4.02 0-.89.32-1.61.84-2.18-.08-.2-.37-1.01.08-2.1 0 0 .68-.22 2.2.83a7.6 7.6 0 0 1 4 0c1.52-1.05 2.2-.83 2.2-.83.45 1.09.16 1.9.08 2.1.52.57.84 1.29.84 2.18 0 3.13-1.91 3.82-3.73 4.02.29.25.55.74.55 1.5v2.22c0 .21.15.45.55.38A8 8 0 0 0 8 0.39Z" />
+                </svg>
+              </span>
+              <span className="github-badge-divider" aria-hidden="true" />
+              <span className="github-badge-icon github-badge-star" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+                  <path d="M8 1.06 10.04 5.2l4.56.66-3.3 3.22.78 4.53L8 11.46l-4.08 2.15.78-4.53-3.3-3.22 4.56-.66L8 1.06Z" />
+                </svg>
+              </span>
+              <span className="github-badge-count">{githubStars ?? '—'}</span>
+            </a>
+          </div>
           <div className="header-sub">marginfi stablecoin deposits on {networkCopy}</div>
         </div>
         <div className="topbar-right">
